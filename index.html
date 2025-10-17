@@ -1,0 +1,416 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Milan Gogolin Portfolio</title>
+    <meta name="description" content="Portfolio of Milan Gogolin. Resume, projects and contact." />
+    <link rel="stylesheet" href="css/style.css" />
+  </head>
+  <body>
+    <header class="title-box" role="banner" aria-label="Name and contact">
+      <div class="container">
+        <div class="title-text">
+          <h1 class="title-name">Milan Gogolin Maker Portfolio</h1>
+          <p class="title-contact">milangogolin@gmail.com</p>
+        </div>
+        <div class="title-logos" aria-hidden="true">
+          <img src="assets/HSMSE_logo.png" alt="HSMSE" class="logo" />
+          <img src="assets/Mount_Sinai_logo.png" alt="Mount Sinai" class="logo" />
+        </div>
+      </div>
+    </header>
+
+    <main class="container">
+      <nav class="tabs" role="tablist" aria-label="Primary">
+        <button role="tab" aria-selected="true" class="tab-button" data-tab="about">About</button>
+        <button role="tab" aria-selected="false" class="tab-button" data-tab="projects">Projects</button>
+  </nav>
+
+      <section id="about" class="tab-panel" data-tabpanel="about">
+        <h2>About</h2>
+        <p>My name is Milan Gogolin. I’m a student at the High School for Math, Science and Engineering and a CEYE research scholar. I’ve always been passionate about engineering. I love the step-by-step process and the creativity involved in forming and ruling out solutions. I like that my creations are a reflection of that creativity and the many hours invested in them. Here is a selection of some of the projects that have absorbed me most.</p>
+        <div class="about-actions">
+          <button id="resume-pdf" class="resume-btn">Resume (PDF)</button>
+        </div>
+      </section>
+
+      <!-- resume tab removed; use the Resume (PDF) button to open the resume in assets -->
+
+      <section id="projects" class="tab-panel" data-tabpanel="projects" hidden>
+        <h2>Projects</h2>
+        <p>These are examples of my work from 2020 to present day. My engineering journey started well before 2020, but I haven’t included these. Most of my projects are rougher drafts and haven’t made the cut.</p>
+        <div class="projects-grid" id="projects-grid" aria-live="polite">
+          <!-- project cards will be injected here -->
+        </div>
+      </section>
+    </main>
+
+    <footer class="site-footer">
+      <div class="container">
+        <p>&copy; <span id="year"></span> Milan Gogolin.</p>
+      </div>
+    </footer>
+
+    <script>
+      // Tab switcher
+      (function(){
+        const tabButtons = document.querySelectorAll('.tab-button');
+        function activateTab(name){
+          tabButtons.forEach(b=>{
+            const sel = b.getAttribute('data-tab')===name;
+            b.setAttribute('aria-selected', sel ? 'true' : 'false');
+          });
+          document.querySelectorAll('.tab-panel').forEach(p=>{
+            if(p.getAttribute('data-tabpanel')===name){ p.removeAttribute('hidden'); }
+            else p.setAttribute('hidden','');
+          });
+        }
+        tabButtons.forEach(b=> b.addEventListener('click', ()=> activateTab(b.getAttribute('data-tab'))));
+        // set initial
+        activateTab('about');
+      })();
+
+      // Footer year
+      document.getElementById('year').textContent = new Date().getFullYear();
+
+      // Optional live-reload client (development only)
+      (function(){
+        const s = document.createElement('script');
+        s.src = '/assets/livereload.js';
+        s.async = true;
+        s.onerror = ()=>{};
+        document.body.appendChild(s);
+      })();
+    </script>
+    <script>
+      // Build a projects grid from assets named P{n}-{i}.{ext}
+      (function(){
+        const grid = document.getElementById('projects-grid');
+        if(!grid) return;
+  const projects = [1,2,3,4,5];
+  const exts = ['png','jpg','jpeg','webp','gif','mp4'];
+
+  // human-readable titles and descriptions for projects
+  const projectMeta = {
+  1: { title: 'Silicone Vacuum Chamber', short: 'Compression Molding Vacuum Chamber (in progress)', desc: 'This is my current project at the David Sachs lab. The goal is to remove air bubbles from the plastic “chips” we are compression molding, which house heart organoids. As of right now, our goal is to place the whole setup in a sealed vacuum chamber. I’ve managed to solve the 200 degree Celsius heat constraint and the need for the chamber to be vertically flexible, by casting a custom silicone ‘bellow’ (with a tube for external vacuuming) using a 3D-printed mold. I’ve had some troubles with maintaining an airtight seal, with deforms when negative pressure is applied. Additionally, the low air density within the bellow makes heat conduction more difficult.' },
+    2: { title: 'Compact Inverted Microscope', short: 'Compact Inverted Microscope', desc: 'I built this microscope for the David Sachs lab – we needed a way to observe tiny heart organoids while actively manipulating the microfluidics around them. The whole setup had to be compact and not have any physical obstructions above the viewing platform, to allow for pipetting in the cramped sterile hood environment. The triangular design allows for a large stage surface while minimizing the number of horizontal stabilizers needed (in this case linear bearings, which I placed at the corners). The stage height is adjusted with a screw shaft attached to a wheel that can be manually rotated. The optical setup uses an infinity-corrected objective, a 50mm tube lens, and a Raspberry Pi camera (with the lens removed), which then projects the image onto a small screen. I installed red oblique LED lighting to illuminate the sample.' },
+    3: { title: 'Arduino IR Remote Signalling', short: 'Arduino IR Remote Signalling', desc: 'I wanted to operate the infrared remote control system of an LED strip light using an Arduino. I knew the remote’s signals were in some sort of digital form (ons and offs and not gradients of infrared brightness), but I had to figure out their pattern. I wired an infrared sensor to the Arduino and wrote a simple code to determine the lengths of the pulses and the pauses between them. I found the variation to be in the pauses, which would either be 550µm or 1650µm. Next, I wrote a code to convert this binary pattern into a number: a unique code for every remote button. Finally, I attempted to essentially do the inverse, and project the same signals back from an IR led. However, this failed to control the strip light, due to the Arduino’s inconsistent pulse widths.' },
+    4: { title: 'Room Layout Design', short: 'Room Layout Design', desc: 'I modeled my room and its existing furniture on Autodesk Inventor, in order to visualize what different desk options and layouts would look like. I researched potential candidates and, using their online diagrams, turned them into CAD files. This allowed me to experiment with aesthetics and spatial practicality.' },
+    5: { title: 'RC Model Airplanes', short: 'RC Model Airplanes', desc: 'This was an ongoing project during COVID. I used a radio transmitter and receiver, brushless motors, ESCs, and LiPo batteries to power the model planes. The steering mechanism utilized elevator and rudder flaps, controlled by servos connected to the receiver. The bodies and wings were made from foamboard or balsa wood, or a combination of the two. There were a number of challenges I encountered – too much drag, too little thrust , not enough control sensitivity, etc.. Often, my planes crashed and broke after only a few trials, so I ended up building a considerable number (around 15). With each rendition I attempted to fix the issues of the last. My progress wasn’t linear, but I did end up with a few very successful designs.' }
+  };
+
+        function findFirstAsset(project, idx){
+          return new Promise((resolve)=>{
+            const tryOne = (i)=>{
+              if(i>=exts.length){ resolve(null); return; }
+              const ext = exts[i];
+              const url = `/assets/P${project}-${idx}.${ext}`;
+              if(ext === 'mp4'){
+                const v = document.createElement('video');
+                v.onloadedmetadata = ()=> resolve(url);
+                v.onerror = ()=> tryOne(i+1);
+                v.src = url; v.preload = 'metadata';
+              } else {
+                const img = new Image(); img.onload = ()=> resolve(url); img.onerror = ()=> tryOne(i+1); img.src = url;
+              }
+            };
+            tryOne(0);
+          });
+        }
+
+        async function gatherAssets(project){
+          const list = [];
+          for(let i=1;i<=12;i++){ // up to 12 per project
+            const found = await findFirstAsset(project, i);
+            if(found) list.push(found); else break;
+          }
+          return list;
+        }
+
+        // create card UI with controls
+        function makeCard(project, assets){
+          const card = document.createElement('article'); card.className='project-card';
+          const wrap = document.createElement('div'); wrap.className='thumb-wrap';
+
+          // helper to create media element (img or video)
+          function createMediaElement(url){
+            if(!url) {
+              const img = document.createElement('img'); img.className='project-thumb'; img.alt = `Project ${project} thumbnail`; img.src = 'data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="400" height="300"><rect width="100%" height="100%" fill="%23f3f5f7"/><text x="50%" y="50%" dominant-baseline="middle" text-anchor="middle" fill="%23999" font-size="20">No image</text></svg>'; return img;
+            }
+            if(url.toLowerCase().endsWith('.mp4')){
+              const v = document.createElement('video'); v.className='project-thumb'; v.muted=true; v.autoplay=true; v.loop=true; v.playsInline=true; v.src = url; v.setAttribute('aria-hidden','true'); return v;
+            } else {
+              const img = document.createElement('img'); img.className='project-thumb'; img.alt = `Project ${project} thumbnail`; img.src = url; return img;
+            }
+          }
+
+          const media = createMediaElement(assets[0]);
+          wrap.appendChild(media);
+          const bar = document.createElement('div'); bar.className='control-bar';
+          const prev = document.createElement('button'); prev.className='control-button'; prev.textContent='‹';
+          const next = document.createElement('button'); next.className='control-button'; next.textContent='›';
+          bar.appendChild(prev); bar.appendChild(next);
+          wrap.appendChild(bar);
+
+          const fs = document.createElement('button'); fs.className='fullscreen-button'; fs.textContent='⤢';
+          wrap.appendChild(fs);
+          card.appendChild(wrap);
+
+          const meta = document.createElement('div'); meta.className='project-meta';
+          const t = document.createElement('h3'); t.className='project-title'; t.textContent = projectMeta[project] ? projectMeta[project].title : `Project ${project}`;
+          meta.appendChild(t);
+          // longer description paragraph
+          if(projectMeta[project] && projectMeta[project].desc){ const d = document.createElement('p'); d.className='project-desc'; d.textContent = projectMeta[project].desc; meta.appendChild(d);
+            // add ellipsis toggle (hidden unless content overflows)
+            const toggle = document.createElement('button'); toggle.className = 'desc-toggle'; toggle.textContent = '⋯';
+            meta.appendChild(toggle);
+            // add a DOM mask element so the bottom fade reliably appears above text
+            const mask = document.createElement('div'); mask.className = 'meta-mask';
+            meta.appendChild(mask);
+            // start collapsed
+            meta.classList.add('collapsed');
+            // helper to check overflow and show toggle if needed
+            function checkOverflow(){
+              // use scrollHeight vs clientHeight on the description element to detect overflow reliably
+              // In force-visible mode we keep the toggle shown for layout verification.
+              // The function remains for future conditional behavior but will not hide the button.
+              const descEl = d;
+              if(!descEl) { return; }
+            }
+            // expose for external callers (we'll call this after appending the card to DOM)
+            card._checkOverflow = checkOverflow;
+            // wire toggle to expand/collapse and notify the global collapse timer
+            toggle.addEventListener('click', (e)=>{
+              // keep this action local to the clicked card only
+              e && e.stopPropagation && e.stopPropagation();
+              e && e.preventDefault && e.preventDefault();
+              const isExpanded = meta.classList.toggle('expanded');
+              if(isExpanded) meta.classList.remove('collapsed'); else meta.classList.add('collapsed');
+              // collapse any other expanded project metas so they stay small
+              try{
+                document.querySelectorAll('.project-meta.expanded').forEach(other=>{
+                  if(other === meta) return;
+                  other.classList.remove('expanded');
+                  other.classList.add('collapsed');
+                });
+              }catch(_){ }
+              // notify global inactivity auto-collapse timer to reset its countdown
+              window.__descToggleInteraction && window.__descToggleInteraction();
+            });
+            // also check overflow after a short and longer delay (best-effort for images/layout)
+            setTimeout(checkOverflow, 50);
+            setTimeout(checkOverflow, 320);
+            // ensure check runs after full page load as a final fallback
+            window.addEventListener('load', checkOverflow);
+          }
+          card.appendChild(meta);
+
+
+          // attach navigation state
+          card._assets = assets;
+          card._index = 0;
+          card._mediaEl = media;
+
+          // inactivity timer: reset to first image after 20s of no interaction
+          card._inactivityTimeout = 20000; // 20 seconds
+          card._inactivityTimer = null;
+          function clearInactivity(){ if(card._inactivityTimer){ clearTimeout(card._inactivityTimer); card._inactivityTimer = null; } }
+          function startInactivity(){ clearInactivity(); card._inactivityTimer = setTimeout(()=>{ if(card._index !== 0){ card._index = 0; updateThumb(); updateControls(); } }, card._inactivityTimeout); }
+          function resetInactivity(){ startInactivity(); }
+
+          function updateControls(){
+            if(!card._assets || card._assets.length<=1){ prev.classList.add('hidden'); next.classList.add('hidden'); }
+            else {
+              prev.classList.toggle('hidden', card._index === 0);
+              next.classList.toggle('hidden', card._index >= card._assets.length - 1);
+            }
+          }
+
+          function updateThumb(){
+            const url = card._assets[card._index];
+            const newEl = createMediaElement(url);
+            if(card._mediaEl && card._mediaEl.parentNode) card._mediaEl.parentNode.replaceChild(newEl, card._mediaEl);
+            card._mediaEl = newEl;
+            // clicking the thumbnail opens viewer
+            newEl.addEventListener('click', ()=>{ resetInactivity(); openViewer(card._assets, card._index); });
+          }
+
+          prev.addEventListener('click', ()=>{ resetInactivity(); if(!card._assets || card._assets.length===0) return; if(card._index>0){ card._index--; updateThumb(); updateControls(); } });
+          next.addEventListener('click', ()=>{ resetInactivity(); if(!card._assets || card._assets.length===0) return; if(card._index < card._assets.length-1){ card._index++; updateThumb(); updateControls(); } });
+          fs.addEventListener('click', ()=>{ resetInactivity(); openViewer(card._assets, card._index); });
+
+          updateControls();
+          // start inactivity countdown for this card
+          startInactivity();
+
+          return card;
+        }
+
+        // populate grid
+        const _checkables = [];
+        (async function(){
+          for(const p of projects){
+            const assets = await gatherAssets(p);
+            const card = makeCard(p, assets);
+            grid.appendChild(card);
+            // after appending, check if the description overflows and show toggle
+            card._checkOverflow && card._checkOverflow();
+            if(card._checkOverflow) _checkables.push(card._checkOverflow);
+            // if the card media is an image, re-check when it loads
+            const img = card.querySelector && card.querySelector('img');
+            if(img){ img.addEventListener('load', ()=>{ card._checkOverflow && card._checkOverflow(); }); }
+          }
+          // also re-run checks on a short timeout to allow layout to settle
+          setTimeout(()=> _checkables.forEach(fn=>fn()), 120);
+        })();
+
+        // re-run overflow checks on resize
+        window.addEventListener('resize', ()=>{ _checkables.forEach(fn=>fn()); });
+        // --- Global auto-collapse for expanded project metas after inactivity ---
+        // collapses all expanded project-meta elements if there has been no toggle interaction
+        // for 60 seconds. We expose a small API on window to reset the timer when a toggle
+        // is clicked (used above).
+        (function(){
+          const COLLAPSE_MS = 60000; // 60 seconds
+          let _timer = null;
+          function clear(){ if(_timer){ clearTimeout(_timer); _timer = null; } }
+          function start(){ clear(); _timer = setTimeout(()=>{ try{ document.querySelectorAll('.project-meta.expanded').forEach(m=>{ m.classList.remove('expanded'); m.classList.add('collapsed'); }); }catch(_){ } }, COLLAPSE_MS); }
+          // public hook used by toggle click handlers to reset the inactivity timer
+          window.__descToggleInteraction = function(){ start(); };
+          // start the timer when the grid is first populated
+          start();
+          // also reset when window regains focus (useful if user switches tabs)
+          window.addEventListener('focus', ()=> start());
+          // expose a cleanup if needed
+          window.__clearDescToggleTimer = clear;
+        })();
+      
+        // viewer overlay element
+        const overlay = document.createElement('div'); overlay.id = 'viewer-overlay';
+        overlay.innerHTML = `
+          <button class="overlay-close" aria-label="Close">✕</button>
+          <div class="viewer-media" tabindex="0"></div>
+          <div class="overlay-controls">
+            <button class="control-button" data-action="prev">‹</button>
+            <button class="control-button" data-action="next">›</button>
+          </div>
+        `;
+        document.body.appendChild(overlay);
+        const overlayMedia = overlay.querySelector('.viewer-media');
+        const overlayClose = overlay.querySelector('.overlay-close');
+        const overlayPrev = overlay.querySelector('[data-action="prev"]');
+        const overlayNext = overlay.querySelector('[data-action="next"]');
+  const overlayZoom = null;
+
+        let viewerAssets = [];
+        let viewerIndex = 0;
+
+        function openViewer(assets, index){
+          viewerAssets = assets || [];
+          viewerIndex = index || 0;
+          overlay.classList.add('active');
+          showViewerMedia();
+          updateOverlayControls();
+        }
+        function closeViewer(){
+          overlay.classList.remove('active');
+          document.exitFullscreen && document.exitFullscreen().catch(()=>{});
+          overlayMedia.innerHTML='';
+        }
+        function showViewerMedia(){
+          overlayMedia.innerHTML = '';
+          const url = viewerAssets[viewerIndex];
+          if(!url) return;
+          if(url.toLowerCase().endsWith('.mp4')){
+            const v = document.createElement('video'); v.src = url; v.controls=true; v.autoplay=true; v.playsInline=true; v.style.maxWidth='94%'; v.style.maxHeight='88%'; overlayMedia.appendChild(v);
+          } else {
+            // show image element in overlay (reverted from iframe approach)
+            const img = document.createElement('img'); img.src = url; img.alt = 'viewer image'; img.className = 'viewer-img'; overlayMedia.appendChild(img);
+          }
+        }
+        // zoom removed: no click/scroll handlers are attached
+
+        function updateOverlayControls(){
+          if(!viewerAssets || viewerAssets.length<=1){ overlayPrev.classList.add('hidden'); overlayNext.classList.add('hidden'); }
+          else {
+            overlayPrev.classList.toggle('hidden', viewerIndex === 0);
+            overlayNext.classList.toggle('hidden', viewerIndex >= viewerAssets.length - 1);
+          }
+        }
+
+    overlayPrev.addEventListener('click', ()=>{ if(!viewerAssets || viewerAssets.length===0) return; if(viewerIndex>0){ viewerIndex--; showViewerMedia(); updateOverlayControls(); } });
+    overlayNext.addEventListener('click', ()=>{ if(!viewerAssets || viewerAssets.length===0) return; if(viewerIndex < viewerAssets.length-1){ viewerIndex++; showViewerMedia(); updateOverlayControls(); } });
+  overlayClose.addEventListener('click', closeViewer);
+  overlayZoom && overlayZoom.addEventListener('click', ()=> toggleZoom());
+        overlay.addEventListener('click', (e)=>{ if(e.target===overlay) closeViewer(); });
+
+        // support keyboard navigation when overlay is open
+        document.addEventListener('keydown', (e)=>{
+          if(!overlay.classList.contains('active')) return;
+          if(e.key === 'Escape') closeViewer();
+          if(e.key === 'ArrowLeft') overlayPrev.click();
+          if(e.key === 'ArrowRight') overlayNext.click();
+        });
+
+        // Optional: double-click overlay to toggle fullscreen
+        // double-click any viewer media to toggle fullscreen
+        overlay.addEventListener('dblclick', (e)=>{ if(!document.fullscreenElement) overlay.requestFullscreen && overlay.requestFullscreen(); else document.exitFullscreen && document.exitFullscreen(); });
+
+        // expose a helper to show a URL inside the same overlay using an iframe
+        window.showOverlay = function(url, opts){
+          opts = opts || {};
+          try{
+            overlay.classList.add('active');
+            overlayMedia.innerHTML = '';
+            const iframe = document.createElement('iframe');
+            iframe.src = url;
+            iframe.className = 'overlay-iframe';
+            iframe.setAttribute('aria-label', 'Overlay document');
+            overlayMedia.appendChild(iframe);
+            if(opts.hideControls !== false){ overlayPrev.classList.add('hidden'); overlayNext.classList.add('hidden'); }
+            else { overlayPrev.classList.remove('hidden'); overlayNext.classList.remove('hidden'); }
+          }catch(e){ window.location.href = url; }
+        };
+        // maintain old name for PDF-specific calls
+        window.showPdf = function(url){ window.showOverlay(url, { hideControls: true }); };
+      })();
+    </script>
+    <script>
+      // Resume (PDF) button: opens assets/Resume.pdf in a new tab/window
+      (function(){
+        const btn = document.getElementById('resume-pdf');
+        if(!btn) return;
+        btn.addEventListener('click', ()=>{
+          if(window.showPdf) window.showPdf('/assets/Resume.pdf');
+          else window.open('/assets/Resume.pdf', '_blank');
+        });
+      })();
+    </script>
+      <script>
+        // Try to pick a readable foreground color from Banner.png
+        (function(){
+          const url = '/assets/Banner.png';
+          const img = new Image(); img.crossOrigin='anonymous'; img.src = url;
+          img.onload = ()=>{
+            try{
+              const c = document.createElement('canvas');
+              const w = Math.min(40, img.width);
+              const h = Math.min(40, img.height);
+              c.width = w; c.height = h;
+              const ctx = c.getContext('2d');
+              ctx.drawImage(img, 0, 0, w, h);
+              const data = ctx.getImageData(0,0,w,h).data;
+              let r=0,g=0,b=0,count=0;
+              for(let i=0;i<data.length;i+=4){ r+=data[i]; g+=data[i+1]; b+=data[i+2]; count++; }
+              r=Math.round(r/count); g=Math.round(g/count); b=Math.round(b/count);
+              const L = (0.2126 * r + 0.7152 * g + 0.0722 * b)/255;
+              const fg = L < 0.55 ? '#ffffff' : '#07101a';
+              document.documentElement.style.setProperty('--title-foreground', fg);
+            }catch(e){/* fail silently */}
+          };
+          img.onerror = ()=>{};
+        })();
+      </script>
+  </body>
+</html>
