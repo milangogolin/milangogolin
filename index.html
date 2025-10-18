@@ -37,6 +37,43 @@
 
       <!-- resume tab removed; use the Resume (PDF) button to open the resume in assets -->
 
+      <!--
+        Project asset filenames (exact names and order) -- upload these to /assets/
+
+        Project 1:
+          P1-1.png
+          P1-2.png
+          P1-3.png
+          P1-4.mp4
+          P1-5.png
+          P1-6.png
+
+        Project 2:
+          P2-1.png
+          P2-2.mp4
+          P2-3.png
+          P2-4.png
+          P2-5.png
+
+        Project 3:
+          P3-1.png
+          P3-2.png
+
+        Project 4:
+          P4-1.png
+          P4-2.mp4
+
+        Project 5:
+          P5-1.JPG
+          P5-2.png
+          P5-3.png
+          P5-4.png
+          P5-5.mp4
+
+        Resume:
+          Resume.pdf
+      -->
+
       <section id="projects" class="tab-panel" data-tabpanel="projects" hidden>
         <h2>Projects</h2>
         <p>These are examples of my work from 2020 to present day. My engineering journey started well before 2020, but I haven’t included these. Most of my projects are rougher drafts and haven’t made the cut.</p>
@@ -84,21 +121,34 @@
       })();
     </script>
     <script>
+      // Public project asset map (relative paths) — external scripts/sites can read window.PROJECT_ASSETS
+      window.PROJECT_ASSETS = {
+        1: ['/assets/P1-1.png','/assets/P1-2.png','/assets/P1-3.png','/assets/P1-4.mp4','/assets/P1-5.png','/assets/P1-6.png'],
+        2: ['/assets/P2-1.png','/assets/P2-2.mp4','/assets/P2-3.png','/assets/P2-4.png','/assets/P2-5.png'],
+        3: ['/assets/P3-1.png','/assets/P3-2.png'],
+        4: ['/assets/P4-1.png','/assets/P4-2.mp4'],
+        5: ['/assets/P5-1.JPG','/assets/P5-2.png','/assets/P5-3.png','/assets/P5-4.png','/assets/P5-5.mp4']
+      };
+
+      // Machine-readable JSON for external scripts: exact filenames (absolute paths)
+      (function(){
+        const json = JSON.stringify(window.PROJECT_ASSETS, null, 2);
+        const s = document.createElement('script');
+        s.type = 'application/json';
+        s.id = 'project-assets-json';
+        s.textContent = json;
+        document.currentScript && document.currentScript.parentNode && document.currentScript.parentNode.insertBefore(s, document.currentScript.nextSibling);
+      })();
+
+    </script>
+    <script>
       // Build a projects grid from assets named P{n}-{i}.{ext}
       (function(){
         const grid = document.getElementById('projects-grid');
         if(!grid) return;
   const projects = [1,2,3,4,5];
-
-  // Explicit asset lists (hardcoded from assets/ directory)
-  // Project assets use exact filenames so the site can be uploaded to GitHub as-is
-  const projectAssets = {
-    1: ['/assets/P1-1.png','/assets/P1-2.png','/assets/P1-3.png','/assets/P1-4.mp4','/assets/P1-5.png','/assets/P1-6.png'],
-    2: ['/assets/P2-1.png','/assets/P2-2.mp4','/assets/P2-3.png','/assets/P2-4.png','/assets/P2-5.png'],
-    3: ['/assets/P3-1.png','/assets/P3-2.png'],
-    4: ['/assets/P4-1.png','/assets/P4-2.mp4'],
-    5: ['/assets/P5-1.JPG','/assets/P5-2.png','/assets/P5-3.png','/assets/P5-4.png','/assets/P5-5.mp4']
-  };
+  // use the public global map (defined above) so external sites can easily read it
+  const projectAssets = window.PROJECT_ASSETS || {};
 
   // human-readable titles and descriptions for projects
   const projectMeta = {
