@@ -1,33 +1,33 @@
 {
   "1": [
-    "P1-1.png",
-    "P1-2.png",
-    "P1-3.png",
-    "P1-4.mp4",
-    "P1-5.png",
-    "P1-6.png"
+    {"src":"assets/P1-1.png","type":"image"},
+    {"src":"assets/P1-2.png","type":"image"},
+    {"src":"assets/P1-3.png","type":"image"},
+    {"src":"assets/P1-4.mp4","type":"video"},
+    {"src":"assets/P1-5.png","type":"image"},
+    {"src":"assets/P1-6.png","type":"image"}
   ],
   "2": [
-    "P2-1.png",
-    "P2-2.mp4",
-    "P2-3.png",
-    "P2-4.png",
-    "P2-5.png"
+    {"src":"assets/P2-1.png","type":"image"},
+    {"src":"assets/P2-2.mp4","type":"video"},
+    {"src":"assets/P2-3.png","type":"image"},
+    {"src":"assets/P2-4.png","type":"image"},
+    {"src":"assets/P2-5.png","type":"image"}
   ],
   "3": [
-    "P3-1.png",
-    "P3-2.png"
+    {"src":"assets/P3-1.png","type":"image"},
+    {"src":"assets/P3-2.png","type":"image"}
   ],
   "4": [
-    "P4-1.png",
-    "P4-2.mp4"
+    {"src":"assets/P4-1.png","type":"image"},
+    {"src":"assets/P4-2.mp4","type":"video"}
   ],
   "5": [
-    "P5-1.JPG",
-    "P5-2.png",
-    "P5-3.png",
-    "P5-4.png",
-    "P5-5.mp4"
+    {"src":"assets/P5-1.JPG","type":"image"},
+    {"src":"assets/P5-2.png","type":"image"},
+    {"src":"assets/P5-3.png","type":"image"},
+    {"src":"assets/P5-4.png","type":"image"},
+    {"src":"assets/P5-5.mp4","type":"video"}
   ],
-  "resume": "Resume.pdf"
+  "resume": {"src":"assets/Resume.pdf","type":"document"}
 }

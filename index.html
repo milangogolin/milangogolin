@@ -38,7 +38,7 @@
       <!-- resume tab removed; use the Resume (PDF) button to open the resume in assets -->
 
       <!--
-        Project asset filenames (exact names and order) -- upload these to /assets/
+        Project asset filenames (exact names and order) -- upload these to assets/
 
         Project 1:
           P1-1.png
@@ -113,8 +113,8 @@
 
       // Optional live-reload client (development only)
       (function(){
-        const s = document.createElement('script');
-        s.src = '/assets/livereload.js';
+  const s = document.createElement('script');
+  s.src = 'assets/livereload.js';
         s.async = true;
         s.onerror = ()=>{};
         document.body.appendChild(s);
@@ -123,11 +123,36 @@
     <script>
       // Public project asset map (relative paths) — external scripts/sites can read window.PROJECT_ASSETS
       window.PROJECT_ASSETS = {
-        1: ['/assets/P1-1.png','/assets/P1-2.png','/assets/P1-3.png','/assets/P1-4.mp4','/assets/P1-5.png','/assets/P1-6.png'],
-        2: ['/assets/P2-1.png','/assets/P2-2.mp4','/assets/P2-3.png','/assets/P2-4.png','/assets/P2-5.png'],
-        3: ['/assets/P3-1.png','/assets/P3-2.png'],
-        4: ['/assets/P4-1.png','/assets/P4-2.mp4'],
-        5: ['/assets/P5-1.JPG','/assets/P5-2.png','/assets/P5-3.png','/assets/P5-4.png','/assets/P5-5.mp4']
+        1: [
+          {src: 'assets/P1-1.png', type: 'image'},
+          {src: 'assets/P1-2.png', type: 'image'},
+          {src: 'assets/P1-3.png', type: 'image'},
+          {src: 'assets/P1-4.mp4', type: 'video'},
+          {src: 'assets/P1-5.png', type: 'image'},
+          {src: 'assets/P1-6.png', type: 'image'}
+        ],
+        2: [
+          {src: 'assets/P2-1.png', type: 'image'},
+          {src: 'assets/P2-2.mp4', type: 'video'},
+          {src: 'assets/P2-3.png', type: 'image'},
+          {src: 'assets/P2-4.png', type: 'image'},
+          {src: 'assets/P2-5.png', type: 'image'}
+        ],
+        3: [
+          {src: 'assets/P3-1.png', type: 'image'},
+          {src: 'assets/P3-2.png', type: 'image'}
+        ],
+        4: [
+          {src: 'assets/P4-1.png', type: 'image'},
+          {src: 'assets/P4-2.mp4', type: 'video'}
+        ],
+        5: [
+          {src: 'assets/P5-1.JPG', type: 'image'},
+          {src: 'assets/P5-2.png', type: 'image'},
+          {src: 'assets/P5-3.png', type: 'image'},
+          {src: 'assets/P5-4.png', type: 'image'},
+          {src: 'assets/P5-5.mp4', type: 'video'}
+        ]
       };
 
       // Machine-readable JSON for external scripts: exact filenames (absolute paths)
@@ -167,15 +192,15 @@
           const card = document.createElement('article'); card.className='project-card';
           const wrap = document.createElement('div'); wrap.className='thumb-wrap';
 
-          // helper to create media element (img or video)
-          function createMediaElement(url){
-            if(!url) {
+          // helper to create media element from a typed asset object {src,type}
+          function createMediaElement(asset){
+            if(!asset || !asset.src){
               const img = document.createElement('img'); img.className='project-thumb'; img.alt = `Project ${project} thumbnail`; img.src = 'data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="400" height="300"><rect width="100%" height="100%" fill="%23f3f5f7"/><text x="50%" y="50%" dominant-baseline="middle" text-anchor="middle" fill="%23999" font-size="20">No image</text></svg>'; return img;
             }
-            if(url.toLowerCase().endsWith('.mp4')){
-              const v = document.createElement('video'); v.className='project-thumb'; v.muted=true; v.autoplay=true; v.loop=true; v.playsInline=true; v.src = url; v.setAttribute('aria-hidden','true'); return v;
+            if(asset.type === 'video'){
+              const v = document.createElement('video'); v.className='project-thumb'; v.muted=true; v.autoplay=true; v.loop=true; v.playsInline=true; v.src = asset.src; v.setAttribute('aria-hidden','true'); return v;
             } else {
-              const img = document.createElement('img'); img.className='project-thumb'; img.alt = `Project ${project} thumbnail`; img.src = url; return img;
+              const img = document.createElement('img'); img.className='project-thumb'; img.alt = `Project ${project} thumbnail`; img.src = asset.src; return img;
             }
           }
 
@@ -262,8 +287,8 @@
           }
 
           function updateThumb(){
-            const url = card._assets[card._index];
-            const newEl = createMediaElement(url);
+            const asset = card._assets[card._index];
+            const newEl = createMediaElement(asset);
             if(card._mediaEl && card._mediaEl.parentNode) card._mediaEl.parentNode.replaceChild(newEl, card._mediaEl);
             card._mediaEl = newEl;
             // clicking the thumbnail opens viewer
@@ -354,13 +379,19 @@
         }
         function showViewerMedia(){
           overlayMedia.innerHTML = '';
-          const url = viewerAssets[viewerIndex];
-          if(!url) return;
-          if(url.toLowerCase().endsWith('.mp4')){
-            const v = document.createElement('video'); v.src = url; v.controls=true; v.autoplay=true; v.playsInline=true; v.style.maxWidth='94%'; v.style.maxHeight='88%'; overlayMedia.appendChild(v);
+          const asset = viewerAssets[viewerIndex];
+          if(!asset) return;
+          if(asset.type === 'video'){
+            const v = document.createElement('video'); v.src = asset.src; v.controls=true; v.autoplay=true; v.playsInline=true; v.style.maxWidth='94%'; v.style.maxHeight='88%'; overlayMedia.appendChild(v);
+          } else if(asset.type === 'image'){
+            // show image element in overlay
+            const img = document.createElement('img'); img.src = asset.src; img.alt = 'viewer image'; img.className = 'viewer-img'; overlayMedia.appendChild(img);
+          } else if(asset.type === 'document'){
+            // show documents (PDF) inside iframe overlay
+            const iframe = document.createElement('iframe'); iframe.src = asset.src; iframe.className = 'overlay-iframe'; iframe.setAttribute('aria-label', 'Overlay document'); overlayMedia.appendChild(iframe);
           } else {
-            // show image element in overlay (reverted from iframe approach)
-            const img = document.createElement('img'); img.src = url; img.alt = 'viewer image'; img.className = 'viewer-img'; overlayMedia.appendChild(img);
+            // fallback: try to render as image
+            const img = document.createElement('img'); img.src = asset.src || ''; img.alt = 'viewer item'; img.className = 'viewer-img'; overlayMedia.appendChild(img);
           }
         }
         // zoom removed: no click/scroll handlers are attached
@@ -416,15 +447,15 @@
         const btn = document.getElementById('resume-pdf');
         if(!btn) return;
         btn.addEventListener('click', ()=>{
-          if(window.showPdf) window.showPdf('/assets/Resume.pdf');
-          else window.open('/assets/Resume.pdf', '_blank');
+          if(window.showPdf) window.showPdf('assets/Resume.pdf');
+          else window.open('assets/Resume.pdf', '_blank');
         });
       })();
     </script>
       <script>
         // Try to pick a readable foreground color from Banner.png
         (function(){
-          const url = '/assets/Banner.png';
+          const url = 'assets/Banner.png';
           const img = new Image(); img.crossOrigin='anonymous'; img.src = url;
           img.onload = ()=>{
             try{
