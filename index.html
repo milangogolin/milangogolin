@@ -89,7 +89,16 @@
         const grid = document.getElementById('projects-grid');
         if(!grid) return;
   const projects = [1,2,3,4,5];
-  const exts = ['png','jpg','jpeg','webp','gif','mp4'];
+
+  // Explicit asset lists (hardcoded from assets/ directory)
+  // Project assets use exact filenames so the site can be uploaded to GitHub as-is
+  const projectAssets = {
+    1: ['/assets/P1-1.png','/assets/P1-2.png','/assets/P1-3.png','/assets/P1-4.mp4','/assets/P1-5.png','/assets/P1-6.png'],
+    2: ['/assets/P2-1.png','/assets/P2-2.mp4','/assets/P2-3.png','/assets/P2-4.png','/assets/P2-5.png'],
+    3: ['/assets/P3-1.png','/assets/P3-2.png'],
+    4: ['/assets/P4-1.png','/assets/P4-2.mp4'],
+    5: ['/assets/P5-1.JPG','/assets/P5-2.png','/assets/P5-3.png','/assets/P5-4.png','/assets/P5-5.mp4']
+  };
 
   // human-readable titles and descriptions for projects
   const projectMeta = {
@@ -100,33 +109,7 @@
     5: { title: 'RC Model Airplanes', short: 'RC Model Airplanes', desc: 'This was an ongoing project during COVID. I used a radio transmitter and receiver, brushless motors, ESCs, and LiPo batteries to power the model planes. The steering mechanism utilized elevator and rudder flaps, controlled by servos connected to the receiver. The bodies and wings were made from foamboard or balsa wood, or a combination of the two. There were a number of challenges I encountered – too much drag, too little thrust , not enough control sensitivity, etc.. Often, my planes crashed and broke after only a few trials, so I ended up building a considerable number (around 15). With each rendition I attempted to fix the issues of the last. My progress wasn’t linear, but I did end up with a few very successful designs.' }
   };
 
-        function findFirstAsset(project, idx){
-          return new Promise((resolve)=>{
-            const tryOne = (i)=>{
-              if(i>=exts.length){ resolve(null); return; }
-              const ext = exts[i];
-              const url = `/assets/P${project}-${idx}.${ext}`;
-              if(ext === 'mp4'){
-                const v = document.createElement('video');
-                v.onloadedmetadata = ()=> resolve(url);
-                v.onerror = ()=> tryOne(i+1);
-                v.src = url; v.preload = 'metadata';
-              } else {
-                const img = new Image(); img.onload = ()=> resolve(url); img.onerror = ()=> tryOne(i+1); img.src = url;
-              }
-            };
-            tryOne(0);
-          });
-        }
-
-        async function gatherAssets(project){
-          const list = [];
-          for(let i=1;i<=12;i++){ // up to 12 per project
-            const found = await findFirstAsset(project, i);
-            if(found) list.push(found); else break;
-          }
-          return list;
-        }
+        // gatherAssets/findFirstAsset removed — using hardcoded projectAssets above
 
         // create card UI with controls
         function makeCard(project, assets){
@@ -251,7 +234,7 @@
         const _checkables = [];
         (async function(){
           for(const p of projects){
-            const assets = await gatherAssets(p);
+            const assets = projectAssets[p] || [];
             const card = makeCard(p, assets);
             grid.appendChild(card);
             // after appending, check if the description overflows and show toggle
