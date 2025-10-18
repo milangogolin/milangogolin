@@ -146,9 +146,10 @@
       (function(){
         const grid = document.getElementById('projects-grid');
         if(!grid) return;
-  const projects = [1,2,3,4,5];
-  // use the public global map (defined above) so external sites can easily read it
+  // use the public global map (defined above) as the single source of truth
   const projectAssets = window.PROJECT_ASSETS || {};
+  // derive an ordered list of project IDs from the map keys (numeric sort)
+  const projects = Object.keys(projectAssets).map(k=>Number(k)).filter(n=>!Number.isNaN(n)).sort((a,b)=>a-b);
 
   // human-readable titles and descriptions for projects
   const projectMeta = {
